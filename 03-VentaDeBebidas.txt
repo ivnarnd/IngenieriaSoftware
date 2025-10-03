@@ -1,0 +1,114 @@
+Problema 3: Venta de bebidas
+Se desea modelar un sistema para el manejo de venta de bebidas alcohólicas en línea. Para poder empezar a comprar
+en el sitio, es necesario que las personas se registren ingresando nombre, apellido, mail (será utilizado como nombre de
+usuario por lo tanto debe ser único) y edad. Solo se permite que se registren al sitio personas mayores a 18 años, de lo
+contrario el sistema debe mostrar en pantalla el texto de la ley que impide la venta de bebidas alcohólicas a menores. Si
+el registro es exitoso el sistema genera una contraseña que es enviada al email ingresado en el registro.
+Para comprar el usuario debe iniciar sesión y una vez logueado el sistema muestra una lista de bebidas, una vez que
+el usuario selecciona todos los productos que desea comprar, si el usuario es premium se le hace un descuento del 20%
+y se informa en pantalla el total menos el 20%. Además si el usuario seleccionó productos por un monto superior a los
+$4500 se le hace un 10% de descuento y se informa en pantalla el total menos el 10%. Tenga en cuenta que si el usuario
+es premium y compra por un monto superior a $4500 se deben aplicar ambos descuentos.
+
+
+Roles de usuarios
+Persona(usuario no registrado)
+Usuario
+Usuario Premium
+
+
+Historias de Usuario
+Registrar Usuario
+Iniciar Sesión
+Cerrar Sesión
+Comprar
+
+ID  Registrar Usuario
+TITULO como Persona quiero registrarme para poder comprar en el sitio
+REGLAS DE NEGOCIO 
+	.email único : un email debe estar registrado una sola vez
+	.mayor : la persona que se desea registrar debe ser mayor a 18 años
+
+CRITERIOS DE ACEPTACION
+
+Escenario 1: registro exitoso
+DADO un email “Juanperez@gmail.com” no registrado y la edad 20
+CUANDO la persona ingresa: “Juan Perez”, Juanperez@gmail.com, 20 y presiona “Registrar”
+ENTONCES  El sistema genera su contraseña, da de alta a la persona como registrada, manda el email con la contraseña e informa
+“Persona registrada”.
+
+Escenario 2: registro erróneo por email 
+DADO  el email “Juanperez1@gmail.com” ya registrado  
+CUANDO la persona ingresa: “Juan Perez”,  Juanperez1@gmail.com y presiona “Registrar”
+ENTONCES el sistema informa “El email ya se encuentra registrado”
+
+Escenario 3: registro erróneo por edad menor a 18
+DADO la edad 17
+CUANDO la persona ingresa “Pedro Perez”, PedroP@gmail.com, 17 y presiona “Registrar”
+ENTONCES el sistema informa “Por la ley de Prohibición de ventas a menores usted no se puede registrar”
+
+
+
+ID Iniciar Sesión
+TITULO como usuario quiero iniciar sesión en el sitio para poder comprar 
+REGLAS DE NEGOCIO
+	. Credenciales validas : las credenciales deben estar registradas
+
+CRITERIOS DE ACEPTACION
+
+ESCENARIO 1 : Inicio Exitoso
+DADO  el email Juanperez@gmail.com registrado y la contraseña “pepe123” correlativa al usuario
+CUANDO 	la persona ingresa “Juanperez@gmail.com” y la contraseña “pepe123” y pulsa “Ingresar”
+ENTONCES el sistema corrobora las credenciales y redirige al usuario a la sección de compra.
+ 
+ESCENARIO 2 : Inicio Erróneo por email no registrado 
+DADO  el email PedroP@gmail.com  no registrado
+CUANDO 	la persona ingresa “PedroP@gmail.com” y la contraseña “pepe123” y pulsa “Ingresar”
+ENTONCES el sistema corrobora las credenciales e informa “Usuario o contraseña no validas”
+
+ESCENARIO 3 : Inicio Erróneo por contraseña incorrecta
+DADO  el email Juanperez@gmail.com registrado y la contraseña “pepe1232” no correlativa al usuario
+CUANDO 	la persona ingresa “Juanperez@gmail.com” y la contraseña “pepe1232” y pulsa “Ingresar”
+ENTONCES el sistema corrobora las credenciales e informa “Usuario o contraseña no validas.”
+
+ID Cerrar Sesión
+TITULO como usuario autenticado quiero cerrar mi sesión en el sitio
+REGLAS DE NEGOCIO
+	.Tener una sesión iniciada en el sitio
+CRITERIOS DE ACEPTACION
+
+ESCENARIO 1: Cierre de Sesión exitoso
+DADO el usuario autenticado correctamente
+CUANDO pulsa el botón de cierre de sesión
+ENTONCES el sistema cierra la sesión y redirige al Inicio de sesión
+
+ID comprar Productos
+TITULO como usuario logeado quiero comprar productos 
+REGLAS DE NEGOCIO
+	.Usuario Autenticado: el usuario debe tener la sesión iniciada en la plataforma 
+	.Usuario Premium : El usuario es premium se le hace un descuento del 20% y se informa en pantalla el total menos el 20%
+	.Monto Mayor: si el usuario seleccionó productos por un monto superior a los $4500 se le hace un 10% de descuento y se informa en pantalla el total menos el 10%. 
+	.Descuentos Acumulables: los descuentos son acumulables.
+	
+CRITERIOS DE ACEPTACION
+
+ESCENARIO 1 : Compra de Usuario Premium
+DADO el usuario Juanperez@gmail.com correctamente autenticado y ademas premium
+CUANDO el usuario selecciona artículos por el total de $2000 y presiona “Comprar”
+ENTONCES el sistema corrobora la categoría de usuario y calcula el monto de la compra aplicando el descuento del 20% luego muestra en pantalla “$1600”
+
+ESCENARIO 2 : Compra de Usuario Premium Mayor a $4500
+DADO el usuario Juanperez@gmail.com correctamente autenticado y ademas premium
+CUANDO el usuario selecciona artículos por el total de $6000 y presiona “Comprar”
+ENTONCES el sistema corrobora la categoría de usuario y calcula el monto de la compra aplicando el descuento del 20% luego aplica el descuento por %10 al superar el monto $4500  y muestra en pantalla “$4320”.
+
+ESCENARIO 3: Compra Usuario no Premium 
+DADO el usuario Pacolamar@gmail.com correctamente autenticado 
+CUANDO el usuario selecciona los artículos por un total de $2000 y presiona “Comprar”
+ENTONCES el sistema corrobora la categoría de usuario y el monto de la compra,no aplica ningún descuento. Luego muestra en pantalla “$2000”
+
+ESCENARIO 4: Compra Usuario no Premium Mayor a $4500
+DADO el usuario Pacolamar@gmail.com correctamente autenticado
+CUANDO el usuario selecciona artículos por el total de $6000 y presiona “Comprar”
+ENTONCES el sistema corrobora la categoría del usuario y el monto de la compra, aplica el descuento de 10%. Luego muestra en pantalla. “$5400”.
+
